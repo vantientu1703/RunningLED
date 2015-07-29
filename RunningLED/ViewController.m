@@ -17,24 +17,33 @@
     CGFloat _margin;
     CGFloat _ballDiameter;
     int _numberOfBall;
-    int _timer;
+    NSTimer* _timer;
     int _ledON;
     int _ledON2;
+    NSTimer* _timer2;
+    int t;
+    NSTimer* _t;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     _margin=40;
-    _numberOfBall=8;
     _ballDiameter=32;
-    _ledON=_numberOfBall;
-    _ledON2=-1;
-    [self DrawnumberOfBalls: _numberOfBall andY:100];
-    //[self atX:100 andY:100 withTag:1];
+    _ledON=-1;
+    int soDong=10;
+    int soCot=10;
+    _numberOfBall=soCot*soDong;
+    _ledON2=_numberOfBall-1;
+    [self themSodong:soDong atX:soCot toaDoY:50 withTag:100];
     _timer=[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(runningLED) userInfo:nil repeats:true];
-   //_timer=[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(runningLED2) userInfo:nil repeats:true];
+    
 }
--(void) runningLED2{
+-(void) themSodong: (int) x atX: (int) n toaDoY:(CGFloat) y withTag:(int) tag{
+    for(int i=0;i<x;i++){
+        [self DrawnumberOfBalls:n andY:y=y+50 withtag:i*x+tag];
+    }
+}
+-(void) runningLED{
     if(_ledON!=-1){
         [self turnOfLed:_ledON];
     }
@@ -44,34 +53,19 @@
         _ledON=0;
     }
     [self turnOnLed:_ledON];
-}
--(void) runningLED{
-    if(_ledON!=_numberOfBall){
-        [self turnOfLed:_ledON];
-    }
-    if (_ledON!=0) {
-        _ledON--;
-    }else{
-        _ledON=_numberOfBall-1;
-    }
-    [self turnOnLed:_ledON];
     
-    
-    
-    if(_ledON2!=-1){
+    if(_ledON2!=_numberOfBall-1){
         [self turnOfLed:_ledON2];
     }
-    if(_ledON2!=_numberOfBall-1){
-        _ledON2++;
+    if(_ledON2!=0){
+        _ledON2--;
     }else{
-        _ledON2=0;
+        _ledON2=_numberOfBall-1;
     }
     [self turnOnLed:_ledON2];
-    
-    
-    
 }
--(void) turnOnLed:(int) index{
+
+-(void) turnOnLed:(int) index {
     UIView *view=[self.view viewWithTag:index+100];
     if (view && [view isMemberOfClass:[UIImageView class]]) {
         UIImageView* ball=(UIImageView*) view;
@@ -85,6 +79,7 @@
         ball.image=[UIImage imageNamed:@"grey"];
     }
 }
+
 -(void) atX: (CGFloat) x andY: (CGFloat)y withTag: (int) tag{
     UIImageView *ball=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"grey"]];
     ball.center=CGPointMake(x, y);
@@ -94,16 +89,17 @@
 -(CGFloat) spaceBetweenBallandSpace: (int) n{
     return (self.view.bounds.size.width-2*_margin)/(n-1);
 }
--(void) DrawnumberOfBalls: (int) n andY:(CGFloat)y{
+-(void) DrawnumberOfBalls: (int) n andY:(CGFloat)y withtag:(int) tag{
     CGFloat space=[self spaceBetweenBallandSpace:n];
     
         for (int i=0; i<n; i++) {
             [self atX:_margin+i*space
                  andY:y
-              withTag:i+100];
+              withTag:i+tag];
         }
-    
 }
+
+
 @end
 
 
